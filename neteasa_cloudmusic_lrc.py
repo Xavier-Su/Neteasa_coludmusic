@@ -17,7 +17,7 @@ upage = 0
 
 find_lrc = re.compile(r'\[.*\]')
 
-
+ldaj
 def main():
     print("开始爬取。。。")
     baseurl = "http://music.163.com/api/song/lyric?id=167882&lv=1&kv=1&tv=-1"
