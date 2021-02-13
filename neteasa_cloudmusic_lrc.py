@@ -17,18 +17,48 @@ upage = 0
 
 find_lrc = re.compile(r'\[.*\]')
 
-ldaj
+
 def main():
     print("开始爬取。。。")
-    baseurl = "http://music.163.com/api/song/lyric?id=167882&lv=1&kv=1&tv=-1"
+    id_nums = input("请输入歌曲在网易云音乐的id号：")
+    url_a = 'http://music.163.com/api/song/lyric?id='
+    url_b = '&lv=1&kv=1&tv=-1'
+    baseurl = url_a + id_nums + url_b
+
+    print("提取歌曲名中。。。")
+    get_songs(id_nums)
+    print("歌曲名：", songname[0][0])
+    #baseurl = "http://music.163.com/api/song/lyric?id=28793140&lv=1&kv=1&tv=-1"
     get_lrc(baseurl)
 
-    id_num = "网易云某首歌"
+    id_num = "网易云" + songname[0][0]
     txt_name = "的歌曲歌词"
-    save(id_num, txt_name,txt)
+    txt2 = " " + txt
+    print("歌词如下：")
+    print(txt2)
+    print("----------------------")
+    print("正在保存歌词。。。")
+    save(id_num, txt_name, txt2)
+    print("保存成功。。。")
 
+
+songname = []
 lrc = []
 txt = ""
+findsongname = re.compile(r'<em class="f-ff2">(.*?)</em>')
+
+def get_songs(id_nums):
+    global songname
+    url_song_a = 'https://music.163.com/song?id='
+    url_song = url_song_a + id_nums
+    html = ask_url(url_song)
+
+    soup = BeautifulSoup(html, "html.parser")
+    #print(soup)
+    for song_name in soup.find_all('div', class_="tit"):
+        song = re.findall(findsongname, str(song_name))
+        songname.append(song)
+
 
 
 def get_lrc(baseurl):
@@ -47,7 +77,7 @@ def get_lrc(baseurl):
         txt = str(lrc[0])
     #txt = txt.replace("\n", "\n")
     # txt = txt.replace(" ", "\n")
-    print(txt)
+    #print(txt)
 
     return lrc
 
@@ -82,3 +112,4 @@ def save(id_num, txt_name, txt):
 
 if __name__ =="__main__":
     main()
+    print("爬取完成！")
